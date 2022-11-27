@@ -1,7 +1,7 @@
 """
     Implement Heron's algorithm for computing square roots
 
-    Inspired by Konrad Hinsen's discussion of the algorith in this video
+    Inspired by Konrad Hinsen's discussion of the algorithm in this video
     https://www.youtube.com/watch?v=f10NpsMmbis
 """
 module Heron
