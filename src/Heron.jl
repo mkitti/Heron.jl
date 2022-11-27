@@ -16,7 +16,9 @@ module Heron
     struct ℜ_nn{R} <: ℜ
         x::R
         # Check non-negativity on construction
-        ℜ_nn(x::R) where R <: ℜ = x >= 0 ?
+        ℜ_nn(x::R) where R <: ℜ = ℜ_nn{R}(x)
+
+        ℜ_nn{R}(x::R) where R <: ℜ = x >= 0 ?
             new{R}(x) :
             throw(ArgumentError("x must be nonnegative"))
     end
@@ -64,6 +66,13 @@ module Heron
 
     # abs(x-e^2) >= ϵ
     heron(x::ℜ_nn, ϵ::ℜ_nn, e::ℜ_nn, ::Val{false}) =
-        heron(x, ϵ, (e + (x // e))//2ℜ_nn)
+        heron(x, ϵ, (e + (x / e))/2ℜ_nn)
+    # Use Rationals when possible
+    heron(
+        x::ℜ_nn{<: Union{Integer,Rational}},
+        ϵ::ℜ_nn,
+        e::ℜ_nn{<: Union{Integer, Rational}},
+        ::Val{false}
+    ) = heron(x, ϵ, (e + (x // e))//2ℜ_nn)
 
 end
