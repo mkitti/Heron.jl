@@ -7,7 +7,7 @@ using Test
     @test heron(2, 1//1000) |> Rational === 577//408
     @test heron(2, 0.1) |> Rational === 17//12
     @test heron(3, 0.001) |> Rational === 97//56
-    @test heron(4, 0.001) == ℜ_nn{Rational{Int64}}(21523361//10761680)
+    @test heron(4, 0.001) == ℜ⁰⁺{Rational{Int64}}(21523361//10761680)
     @test heron(2., 0.1) ≈ 1.4166666666666665
     @test heron(2., 0.001) ≈ 1.4142156862745097
     @test heron(2., 0.001, 1.) ≈ 1.4142156862745097

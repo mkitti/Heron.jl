@@ -7,72 +7,77 @@
 module Heron
 
     import Base: +, ^, -, *, /, //, promote_rule
-    export ℜ, ℜ_nn, heron
+    export ℜ, ℜ⁰⁺, heron
 
     # Alias Real as ℜ
     const ℜ = Real
 
     # Non-negative real type boxes a real
-    struct ℜ_nn{R} <: ℜ
+    # \re[tab] = ℜ 
+    # \^0[tab] = ⁰
+    # \^+[tab] = ⁺
+    struct ℜ⁰⁺{R} <: ℜ
         x::R
         # Check non-negativity on construction
-        ℜ_nn(x::R) where R <: ℜ = ℜ_nn{R}(x)
+        ℜ⁰⁺(x::R) where R <: ℜ = ℜ⁰⁺{R}(x)
 
-        ℜ_nn{R}(x::R) where R <: ℜ = x >= 0 ?
+        ℜ⁰⁺{R}(x::R) where R <: ℜ = x >= 0 ?
             new{R}(x) :
             throw(ArgumentError("x must be nonnegative"))
     end
 
+    const NonNegativeReal = ℜ⁰⁺
+
     # Type conversion
 
-    # Converting a ℜ_nn to ℜ_nn is just the identity
-    ℜ_nn(r_nn::ℜ_nn) = r_nn
+    # Converting a ℜ⁰⁺ to ℜ⁰⁺ is just the identity
+    ℜ⁰⁺(r⁰⁺::ℜ⁰⁺) = r⁰⁺
 
-    # To convert ℜ to ℜ_nn, call the constructor
-    convert(::Type{ℜ_nn}, x::ℜ) = ℜ_nn(x)
+    # To convert ℜ to ℜ⁰⁺, call the constructor
+    convert(::Type{ℜ⁰⁺}, x::ℜ) = ℜ⁰⁺(x)
 
-    # To convert a ℜ_nn to ℜ convert the boxed type
-    (::Type{R})(r_nn::ℜ_nn) where R <: ℜ = R(r_nn.x)
-    convert(::Type{R}, x::ℜ_nn) where R <: ℜ = convert(R, x.x)
+    # To convert a ℜ⁰⁺ to ℜ convert the boxed type
+    (::Type{R})(r⁰⁺::ℜ⁰⁺) where R <: ℜ = R(r⁰⁺.x)
+    convert(::Type{R}, x::ℜ⁰⁺) where R <: ℜ = convert(R, x.x)
 
-    # ℜ_nn is closed over +, ^, / , //
-    x::ℜ_nn + y::ℜ_nn = ℜ_nn(x.x + y.x)
-    x::ℜ_nn ^ n::Int = ℜ_nn(x.x^n)
-    x::ℜ_nn / y::ℜ_nn = ℜ_nn(x.x / y.x)
-    x::ℜ_nn // y::ℜ_nn = ℜ_nn(x.x // y.x)
+    # ℜ⁰⁺ is closed over +, ^, / , //
+    x::ℜ⁰⁺ + y::ℜ⁰⁺ = ℜ⁰⁺(x.x + y.x)
+    x::ℜ⁰⁺ ^ n::Int = ℜ⁰⁺(x.x^n)
+    x::ℜ⁰⁺ / y::ℜ⁰⁺ = ℜ⁰⁺(x.x / y.x)
+    x::ℜ⁰⁺ // y::ℜ⁰⁺ = ℜ⁰⁺(x.x // y.x)
 
-    # Subtraction of ℜ_nn is not necessarily nonnegative
-    x::ℜ_nn - y::ℜ_nn = x.x - y.x
+    # Subtraction of ℜ⁰⁺ is not necessarily nonnegative
+    x::ℜ⁰⁺ - y::ℜ⁰⁺ = x.x - y.x
 
-    # Convert rℜ_nn to ℜ_nn(r)
-    *(r::ℜ, ::Type{ℜ_nn}) = ℜ_nn(r)
+    # Convert rℜ⁰⁺ to ℜ⁰⁺(r)
+    *(r::ℜ, ::Type{ℜ⁰⁺}) = ℜ⁰⁺(r)
 
     # Unbox the the real to promote
-    promote_rule(r::Type{<: ℜ}, ::Type{ℜ_nn{R}}) where R = promote_type(r, R)
+    promote_rule(r::Type{<: ℜ}, ::Type{ℜ⁰⁺{R}}) where R = promote_type(r, R)
     # If the boxed type and the real are the same
-    # promote_rule(r::Type{R}, ::Type{ℜ_nn{R}}) where R <: Real = R
+    # promote_rule(r::Type{R}, ::Type{ℜ⁰⁺{R}}) where R <: Real = R
 
     # Implement Heron's algorithm
 
-    # Convert all arguments to ℜ_nn
-    heron(args::ℜ...) = heron(ℜ_nn.(args)...)
+    # Convert all arguments to ℜ⁰⁺
+    heron(args::ℜ...) = heron(ℜ⁰⁺.(args)...)
 
     # Dispatch on abs(x-e^2) < ϵ)
-    heron(x::ℜ_nn, ϵ::ℜ_nn, e::ℜ_nn = 1) =
+    heron(x::ℜ⁰⁺, ϵ::ℜ⁰⁺, e::ℜ⁰⁺ = 1) =
         heron(x, ϵ, e, Val(abs(x-e^2) < ϵ))
     
     # abs(x-e^2) < ϵ
-    heron(x::ℜ_nn, ϵ::ℜ_nn, e::ℜ_nn, ::Val{true}) = e
+    heron(x::ℜ⁰⁺, ϵ::ℜ⁰⁺, e::ℜ⁰⁺, ::Val{true}) = e
 
     # abs(x-e^2) >= ϵ
-    heron(x::ℜ_nn, ϵ::ℜ_nn, e::ℜ_nn, ::Val{false}) =
-        heron(x, ϵ, (e + (x / e))/2ℜ_nn)
+    heron(x::ℜ⁰⁺, ϵ::ℜ⁰⁺, e::ℜ⁰⁺, ::Val{false}) =
+        heron(x, ϵ, (e + (x / e))/2ℜ⁰⁺)
     # Use Rationals when possible
     heron(
-        x::ℜ_nn{<: Union{Integer,Rational}},
-        ϵ::ℜ_nn,
-        e::ℜ_nn{<: Union{Integer, Rational}},
+        x::ℜ⁰⁺{<: Union{Integer,Rational}},
+        ϵ::ℜ⁰⁺,
+        e::ℜ⁰⁺{<: Union{Integer, Rational}},
         ::Val{false}
-    ) = heron(x, ϵ, (e + (x // e))//2ℜ_nn)
+    ) = heron(x, ϵ, (e + (x // e))//2ℜ⁰⁺)
 
 end
