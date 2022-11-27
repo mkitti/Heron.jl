@@ -52,7 +52,7 @@ module Heron
     # If the boxed type and the real are the same
     # promote_rule(r::Type{R}, ::Type{ℜ_nn{R}}) where R <: Real = R
 
-    # Impelement Heron's algorithm
+    # Implement Heron's algorithm
 
     # Convert all arguments to ℜ_nn
     heron(args::ℜ...) = heron(ℜ_nn.(args)...)
