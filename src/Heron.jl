@@ -8,6 +8,7 @@ module Heron
 
     import Base: +, ^, -, *, /, //, promote_rule
     export ℜ, ℜ⁰⁺, heron
+    export NonNegativeReal
 
     # Alias Real as ℜ
     const ℜ = Real
