@@ -60,7 +60,7 @@ $$
 ## Implementation
 
 1. I first create a type, `ℜ⁰⁺`, aliased as `NonNegativeReal` that represents real values greater than or equal to 0. The constructor enforces the non-negative condition.
-2. I overload a few operations, $+, -, \^{}\,\,$  for `ℜ⁰⁺` and use Julia's type conversion and promotion system so that we can easily do arithmetic on the new type.
+2. I overload a few operations, $+, -, \^{}$  for `ℜ⁰⁺` and use Julia's type conversion and promotion system so that we can easily do arithmetic on the new type.
 3. The entry method, `heron(x, ϵ, e = 1)` takes arguments for 1) the value whose square root is to be found, 2) the acceptable error to stop the iteration, and 3) optionally, a starting estimate, defaulting to `1`.
 4. The `heron` method then dispatches on whether the iteration stop condition, `abs(x - e^2) < ϵ`, is met. If met, then just return `e`. Otherwise, update the estimate as described above.
 5. The method is meant to accept arguments  of type `ℜ⁰⁺`, but will try to convert any provided arguments to the type.
