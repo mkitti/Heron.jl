@@ -54,7 +54,7 @@ $$
 We can then update our estimate, but compensating by the approximation for the error.
 
 $$ 
-e_{n+1} = e_n + \varepsilon = \frac{x}{2e_n} + \frac{e_n}{2} 
+e_{n+1} = \frac{x}{2e_n} + \frac{e_n}{2} \approx e_n + \varepsilon
 $$
 
 ## Implementation
